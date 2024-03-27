@@ -7,4 +7,9 @@ add_executable(bugs_directory main.cpp
         hash_table/HashTable.cpp
         hash_table/HashTable.h
         hash_table/Pair.cpp
-        hash_table/Pair.h)
+        hash_table/Pair.h
+        avl_trees/Tree.cpp
+        avl_trees/Tree.h
+        Lists/List.cpp
+        Lists/List.h
+)
