@@ -1,10 +1,42 @@
-#include "Tree.h"
-#include <string>
+#ifndef BUGS_DIRECTORY_TREE_H
+#define BUGS_DIRECTORY_TREE_H
+#include <iostream>
+#include "List.h"
 
 using namespace std;
 
-template<typename T, typename L>
-void Tree<T, L>::insertNode(Node<T, L> * newNode, Node<T, L> *tmp) {
+template <typename T>
+struct Node {
+    Node<T> *left, *right, *sup;
+    int bf, hl, hr, id;
+    T value;
+    List<string> *list;
+};
+
+template <typename T>
+class Tree {
+private:
+    Node<T> *root;
+    int nodes;
+    int calcHeightsAndBf(Node<T> *);
+    void rotateRR(Node<T> *);
+    void rotateLL(Node<T> *);
+    void rotateLR(Node<T> *);
+    void rotateRL(Node<T> *);
+    void balance(Node<T> *);
+    void insertNode(Node<T> *, Node<T>*);
+    void search(Node<T> *, T, List<List<string>*>*);
+public:
+    List<List<string>*>* get(T);
+    Tree();
+    void insert(T, List<string>*);
+    std::string dotGraphOfNode(Node<T>*);
+    Node<T> * getRoot();
+};
+
+
+template<typename T>
+void Tree<T>::insertNode(Node<T> * newNode, Node<T> *tmp) {
     if (root == nullptr){ //add first node
         root=newNode;
         root->sup= nullptr;
@@ -29,10 +61,10 @@ void Tree<T, L>::insertNode(Node<T, L> * newNode, Node<T, L> *tmp) {
 }
 
 
-template<typename T, typename L>
-void Tree<T, L>::insert(T newValue, List<L> *newList) {
+template<typename T>
+void Tree<T>::insert(T newValue, List<string> *newList) {
     nodes++;
-    auto *newNode = new Node<int, string>();
+    auto *newNode = new Node<T>();
     newNode->value = newValue;
     newNode->list = newList;
     newNode->id = nodes;
@@ -43,8 +75,8 @@ void Tree<T, L>::insert(T newValue, List<L> *newList) {
 
 
 
-template<typename T, typename L>
-void Tree<T, L>::search(Node<T, L> *node, T value, List<List<L>*> *listL) {
+template<typename T>
+void Tree<T>::search(Node<T> *node, T value, List<List<string>*> *listL) {
     cout<<" !  ";
     if (node != nullptr){
         if(hash<T>()(value) < hash<T>()(node->value)){
@@ -59,21 +91,21 @@ void Tree<T, L>::search(Node<T, L> *node, T value, List<List<L>*> *listL) {
     }
 }
 
-template<typename T, typename L>
-List<List<L> *>* Tree<T, L>::get(T value) {
-    auto *listL = new List<List<L>*>();
+template<typename T>
+List<List<string> *>* Tree<T>::get(T value) {
+    auto *listL = new List<List<string>*>();
     search(root, value, listL);
     return listL;
 }
 
-template<typename T, typename L>
-void Tree<T, L>::balance(Node<T, L> *node) {
+template<typename T>
+void Tree<T>::balance(Node<T> *node) {
     if (node != nullptr) {
         balance(node->left);
         balance(node->right);
         calcHeightsAndBf(root);
         if ((node->bf==2)||(node->bf==-2)){
-            Node<T, L> *next = node->right;
+            Node<T> *next = node->right;
             if ((node->bf>1)&&(next->bf>0)){
                 rotateLL(node);
             }else if((node->bf>1)&&(next->bf<0)){
@@ -90,15 +122,15 @@ void Tree<T, L>::balance(Node<T, L> *node) {
     }
 }
 
-template<typename T, typename L>
-void Tree<T, L>::rotateRL(Node<T, L> *node) {
-        Node<T, L> *next = node->right;
-        Node<T, L> *nextNext = next->left;
+template<typename T>
+void Tree<T>::rotateRL(Node<T> *node) {
+    Node<T> *next = node->right;
+    Node<T> *nextNext = next->left;
     if (node == root){
         root = nextNext;
         nextNext->sup = nullptr;
     }else{
-        Node<T, L> *prev = node->sup;
+        Node<T> *prev = node->sup;
         prev->right = nextNext;
         nextNext->sup = prev;
     }
@@ -110,16 +142,16 @@ void Tree<T, L>::rotateRL(Node<T, L> *node) {
     node->right = nullptr;
 }
 
-template<typename T, typename L>
-void Tree<T, L>::rotateLR(Node<T, L> *node) {
+template<typename T>
+void Tree<T>::rotateLR(Node<T> *node) {
     cout<<"rotate node: "<<node->value;
-    Node<T, L> *next = node->left;
-    Node<T, L> *nextNext = next->right;
+    Node<T> *next = node->left;
+    Node<T> *nextNext = next->right;
     if (node == root) {
         root = nextNext;
         nextNext->sup = nullptr;
     } else {
-        Node<T, L> *prev = node->sup;
+        Node<T> *prev = node->sup;
         prev->left = nextNext;
         nextNext->sup = prev;
     }
@@ -131,15 +163,15 @@ void Tree<T, L>::rotateLR(Node<T, L> *node) {
     node->left = nullptr;
 }
 
-template<typename T, typename L>
-void Tree<T, L>::rotateLL(Node<T, L> *node) {
+template<typename T>
+void Tree<T>::rotateLL(Node<T> *node) {
     cout<<"rotate LL"<<node->value;
-    Node<T, L> *next = node->right;
+    Node<T> *next = node->right;
     if (node == root){
         root = next;
         next->sup = nullptr;
     }else{
-        Node<T, L> *prev = node->sup;
+        Node<T> *prev = node->sup;
         prev->right = node->right;
         next->sup = prev;
     }
@@ -153,15 +185,15 @@ void Tree<T, L>::rotateLL(Node<T, L> *node) {
     node->sup = next;
 }
 
-template<typename T, typename L>
-void Tree<T, L>::rotateRR(Node<T, L> *node) {
+template<typename T>
+void Tree<T>::rotateRR(Node<T> *node) {
     cout<<"rotate RR"<<node->value;
-    Node<T, L> *next = node->left;
+    Node<T> *next = node->left;
     if (node == root){
         root = next;
         next->sup = nullptr;
     }else{
-        Node<T, L> *prev = node->sup;
+        Node<T> *prev = node->sup;
         prev->left = next;
         next->sup = prev;
     }
@@ -177,8 +209,8 @@ void Tree<T, L>::rotateRR(Node<T, L> *node) {
 }
 
 
-template<typename T, typename L>
-int Tree<T, L>::calcHeightsAndBf(Node<T, L> *node) { //returns the overall height of the node
+template<typename T>
+int Tree<T>::calcHeightsAndBf(Node<T> *node) { //returns the overall height of the node
     if (node == nullptr) return 0 ;
     else {
         node->hl = calcHeightsAndBf(node->left);
@@ -189,11 +221,12 @@ int Tree<T, L>::calcHeightsAndBf(Node<T, L> *node) { //returns the overall heigh
     }
 }
 
-template<typename T, typename L>
-string Tree<T, L>::dotGraphOfNode(Node<T, L> *node) {
+template<typename T>
+string Tree<T>::dotGraphOfNode(Node<T> *node) {
     string ans;
     if (node != nullptr) {
-        ans = "\nn" + to_string(node->id) + " ;"+"\nn"+ to_string(node->id) +" [label=\""+ to_string(node->value) +"\"] ;";
+        string val = node->value;
+        ans = "\nn" + to_string(node->id) + " ;"+"\nn"+ to_string(node->id) +" [label=\"" + val +"\"] ;";
         if (node->left != nullptr){
             ans.append("\nn"+  to_string(node->id) + " -- n" + to_string(node->left->id) + " ;");
             ans.append(dotGraphOfNode(node->left));
@@ -206,14 +239,15 @@ string Tree<T, L>::dotGraphOfNode(Node<T, L> *node) {
     return ans;
 }
 
-template<typename T, typename L>
-Tree<T, L>::Tree() {
+template<typename T>
+Tree<T>::Tree() {
     root = nullptr;
     nodes = 0;
 }
 
-template<typename T, typename L>
-Node<T, L> * Tree<T, L>::getRoot() {
+template<typename T>
+Node<T> * Tree<T>::getRoot() {
     return root;
 }
 
+#endif

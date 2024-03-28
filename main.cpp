@@ -1,8 +1,7 @@
 #include <iostream>
 #include "hash_table/HashTable.h"
-#include "hash_table/HashTable.cpp"
-#include "avl_trees/Tree.h"
-#include "avl_trees/Tree.cpp"
+#include "Tree.h"
+#include "Controller.h"
 #include <stdexcept>
 
 using namespace std;
@@ -25,28 +24,31 @@ using namespace std;
  }
 
  void testTree() {
-     auto *avlTree = new Tree<int, string>();
+     auto *avlTree = new Tree<string>();
      auto *list = new List<string> ();
      list->add("h");
      list->add("i");
-     avlTree->insert(3, list);
-     avlTree->insert(2, list);
-     avlTree->insert(1, list);
-     avlTree->insert(6, list);
-     avlTree->insert(8, list);
-     avlTree->insert(12, list);
-     avlTree->insert(7, list);
-     avlTree->insert(34, list);
-     avlTree->insert(21, list);
-     avlTree->insert(36, list);
-     avlTree->insert(21, list);
-     avlTree->insert(21, list);
-     List<List<string>*> *lists = avlTree->get(21);
+     avlTree->insert("3", list);
+     avlTree->insert("2", list);
+     avlTree->insert("1", list);
+     avlTree->insert("6", list);
+     avlTree->insert("8", list);
+     avlTree->insert("12", list);
+     avlTree->insert("7", list);
+     avlTree->insert("34", list);
+     avlTree->insert("21", list);
+     avlTree->insert("36", list);
+     avlTree->insert("21", list);
+     avlTree->insert("21", list);
+     List<List<string>*> *lists = avlTree->get("21");
      cout<<"\nFound: "<<lists->getSize();
  }
 
 int main() {
-    testTree();
+    Controller *controller = new Controller();
+    controller->analyze("ADD NEW-GROUP clientes FIELDS (nombre1 STRING, nombre2 STRING, apellido STRING, celular INTEGER);");
+    controller->analyze("ADD NEW-GROUP amigos FIELDS (nombre STRING, apellido STRING, celular INTEGER);");
+    controller->drawCompleteGraph();
     cout<<"\n\nBye!";
     return 0;
 }

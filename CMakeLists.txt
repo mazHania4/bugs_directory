@@ -4,12 +4,13 @@ project(bugs_directory)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(bugs_directory main.cpp
-        hash_table/HashTable.cpp
         hash_table/HashTable.h
         hash_table/Pair.cpp
         hash_table/Pair.h
-        avl_trees/Tree.cpp
-        avl_trees/Tree.h
-        Lists/List.cpp
-        Lists/List.h
+        Tree.h
+        List.h
+        Controller.cpp
+        Controller.h
+        model/Field.cpp
+        model/Field.h
 )
