@@ -46,8 +46,14 @@ using namespace std;
 
 int main() {
     Controller *controller = new Controller();
-    controller->analyze("ADD NEW-GROUP clientes FIELDS (nombre1 STRING, nombre2 STRING, apellido STRING, celular INTEGER);");
-    controller->analyze("ADD NEW-GROUP amigos FIELDS (nombre STRING, apellido STRING, celular INTEGER);");
+    controller->analyze("ADD NEW-GROUP clientes FIELDS (nombre1 STRING, apellido STRING, celular INTEGER);");
+    controller->analyze("ADD NEW-GROUP amigos FIELDS (nombre STRING, apellido STRING, celular INTEGER, nacimiento DATE);");
+    controller->analyze("ADD CONTACT IN clientes FIELDS (Lucia, Lopez, 96413287);");
+    controller->analyze("ADD CONTACT IN amigos FIELDS (Pedro, Alvarez, 12345678, 02-05-1998);");
+    controller->analyze("ADD CONTACT IN amigos FIELDS (Pedro, Perez, 85256545, 04-09-1989);");
+    controller->analyze("ADD CONTACT IN amigos FIELDS (Marta, Martinez, 41526378, 28-12-1995);");
+    controller->analyze("ADD CONTACT IN amigos FIELDS (Juan, Juarez, 78963214, 14-08-20024);");
+    controller->analyze("FIND CONTACT IN amigos CONTACT-FIELD nombre=ASD");
     controller->drawCompleteGraph();
     cout<<"\n\nBye!";
     return 0;

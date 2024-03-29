@@ -13,6 +13,7 @@ private:
     HashTable<string, HashTable<string,Tree<string>*>* > *groups;
     static Type getType(const string& s);
     static List<Field*>* getFields(string);
+    static List<string>* getData(string);
 public:
     Controller();
     void analyze(const string&);

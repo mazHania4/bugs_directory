@@ -27,7 +27,13 @@ public:
     string dotGraph(const string&);
     List<Pair<int, V>*>* getValues(); //for graphs
     void print();
+    List<K> * getKeys();
 };
+
+template<typename K, typename V>
+List<K> *HashTable<K, V>::getKeys() {
+    return keys;
+}
 
 template<typename K, typename V>
 HashTable<K, V>::HashTable() {

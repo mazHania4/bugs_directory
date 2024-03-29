@@ -30,7 +30,7 @@ public:
     List<List<string>*>* get(T);
     Tree();
     void insert(T, List<string>*);
-    std::string dotGraphOfNode(Node<T>*);
+    std::string dotGraphOfNode(Node<T>*, string);
     Node<T> * getRoot();
 };
 
@@ -70,14 +70,12 @@ void Tree<T>::insert(T newValue, List<string> *newList) {
     newNode->id = nodes;
     insertNode(newNode, root);
     balance(root);
-    cout << "\n\n\ntree: " << dotGraphOfNode(getRoot());
 }
 
 
 
 template<typename T>
 void Tree<T>::search(Node<T> *node, T value, List<List<string>*> *listL) {
-    cout<<" !  ";
     if (node != nullptr){
         if(hash<T>()(value) < hash<T>()(node->value)){
             search(node->left, value, listL);
@@ -144,7 +142,6 @@ void Tree<T>::rotateRL(Node<T> *node) {
 
 template<typename T>
 void Tree<T>::rotateLR(Node<T> *node) {
-    cout<<"rotate node: "<<node->value;
     Node<T> *next = node->left;
     Node<T> *nextNext = next->right;
     if (node == root) {
@@ -165,7 +162,6 @@ void Tree<T>::rotateLR(Node<T> *node) {
 
 template<typename T>
 void Tree<T>::rotateLL(Node<T> *node) {
-    cout<<"rotate LL"<<node->value;
     Node<T> *next = node->right;
     if (node == root){
         root = next;
@@ -187,7 +183,6 @@ void Tree<T>::rotateLL(Node<T> *node) {
 
 template<typename T>
 void Tree<T>::rotateRR(Node<T> *node) {
-    cout<<"rotate RR"<<node->value;
     Node<T> *next = node->left;
     if (node == root){
         root = next;
@@ -198,7 +193,6 @@ void Tree<T>::rotateRR(Node<T> *node) {
         next->sup = prev;
     }
     if (next->right != nullptr){
-        cout<<"pooow";
         node->left = next->right;
         next->right->sup = node;
     } else{
@@ -222,18 +216,18 @@ int Tree<T>::calcHeightsAndBf(Node<T> *node) { //returns the overall height of t
 }
 
 template<typename T>
-string Tree<T>::dotGraphOfNode(Node<T> *node) {
+string Tree<T>::dotGraphOfNode(Node<T> *node, string id) {
     string ans;
     if (node != nullptr) {
         string val = node->value;
-        ans = "\nn" + to_string(node->id) + " ;"+"\nn"+ to_string(node->id) +" [label=\"" + val +"\"] ;";
+        ans = "\n    "+id+"_n" + to_string(node->id) + " ;"+"\n    "+id+"_n"+ to_string(node->id) +" [label=\"" + val +"\"] ;";
         if (node->left != nullptr){
-            ans.append("\nn"+  to_string(node->id) + " -- n" + to_string(node->left->id) + " ;");
-            ans.append(dotGraphOfNode(node->left));
+            ans.append("\n    "+id+"_n"+  to_string(node->id) + " -> "+id+"_n" + to_string(node->left->id) + " ;");
+            ans.append(dotGraphOfNode(node->left, id));
         }
         if (node->right != nullptr){
-            ans.append("\nn"+  to_string(node->id) + " -- n" + to_string(node->right->id) + " ;");
-            ans.append(dotGraphOfNode(node->right));
+            ans.append("\n    "+id+"_n"+  to_string(node->id) + " -> "+id+"_n" + to_string(node->right->id) + " ;");
+            ans.append(dotGraphOfNode(node->right, id));
         }
     }
     return ans;
