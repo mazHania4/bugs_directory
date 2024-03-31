@@ -24,7 +24,7 @@ using namespace std;
  }
 
  void testTree() {
-     auto *avlTree = new Tree<string>();
+     auto *avlTree = new Tree<string>(INTEGER);
      auto *list = new List<string> ();
      list->add("h");
      list->add("i");
@@ -49,11 +49,16 @@ int main() {
     controller->analyze("ADD NEW-GROUP clientes FIELDS (nombre1 STRING, apellido STRING, celular INTEGER);");
     controller->analyze("ADD NEW-GROUP amigos FIELDS (nombre STRING, apellido STRING, celular INTEGER, nacimiento DATE);");
     controller->analyze("ADD CONTACT IN clientes FIELDS (Lucia, Lopez, 96413287);");
+    controller->analyze("ADD CONTACT IN clientes FIELDS (Adrian, Salazar, 75863219);");
     controller->analyze("ADD CONTACT IN amigos FIELDS (Pedro, Alvarez, 12345678, 02-05-1998);");
     controller->analyze("ADD CONTACT IN amigos FIELDS (Pedro, Perez, 85256545, 04-09-1989);");
     controller->analyze("ADD CONTACT IN amigos FIELDS (Marta, Martinez, 41526378, 28-12-1995);");
     controller->analyze("ADD CONTACT IN amigos FIELDS (Juan, Juarez, 78963214, 14-08-20024);");
     controller->analyze("FIND CONTACT IN amigos CONTACT-FIELD nombre=ASD");
+    controller->printStatus();
+    controller->analyze("EXPORT amigos;");
+    controller->analyze("EXPORT clientes;");
+        controller->analyze("REPORTS;");
     controller->drawCompleteGraph();
     cout<<"\n\nBye!";
     return 0;

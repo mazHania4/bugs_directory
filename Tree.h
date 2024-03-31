@@ -2,6 +2,7 @@
 #define BUGS_DIRECTORY_TREE_H
 #include <iostream>
 #include "List.h"
+#include "model/Field.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ template <typename T>
 class Tree {
 private:
     Node<T> *root;
+    DataType type;
     int nodes;
     int calcHeightsAndBf(Node<T> *);
     void rotateRR(Node<T> *);
@@ -26,14 +28,16 @@ private:
     void balance(Node<T> *);
     void insertNode(Node<T> *, Node<T>*);
     void search(Node<T> *, T, List<List<string>*>*);
+    void traverse(Node<T> *, List<List<string>*>*);
 public:
     List<List<string>*>* get(T);
-    Tree();
+    List<List<string>*>* get();
+    explicit Tree(DataType);
     void insert(T, List<string>*);
     std::string dotGraphOfNode(Node<T>*, string);
     Node<T> * getRoot();
+    DataType getType();
 };
-
 
 template<typename T>
 void Tree<T>::insertNode(Node<T> * newNode, Node<T> *tmp) {
@@ -90,10 +94,27 @@ void Tree<T>::search(Node<T> *node, T value, List<List<string>*> *listL) {
 }
 
 template<typename T>
+void Tree<T>::traverse(Node<T> * node, List<List<string> *> *listL) {
+    if (node != nullptr){
+        listL->add(node->list);
+        traverse(node->left, listL);
+        traverse(node->right, listL);
+    }
+}
+
+template<typename T>
 List<List<string> *>* Tree<T>::get(T value) {
     auto *listL = new List<List<string>*>();
     search(root, value, listL);
     return listL;
+}
+
+template<typename T>
+List<List<string> *> *Tree<T>::get() {
+    auto *listL = new List<List<string>*>();
+    traverse(root, listL);
+    return listL;
+    return nullptr;
 }
 
 template<typename T>
@@ -234,14 +255,21 @@ string Tree<T>::dotGraphOfNode(Node<T> *node, string id) {
 }
 
 template<typename T>
-Tree<T>::Tree() {
+Tree<T>::Tree(DataType  newType) {
     root = nullptr;
     nodes = 0;
+    type = newType;
 }
 
 template<typename T>
 Node<T> * Tree<T>::getRoot() {
     return root;
 }
+
+template<typename T>
+DataType Tree<T>::getType() {
+    return type;
+}
+
 
 #endif

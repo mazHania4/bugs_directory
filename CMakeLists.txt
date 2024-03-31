@@ -13,4 +13,5 @@ add_executable(bugs_directory main.cpp
         Controller.h
         model/Field.cpp
         model/Field.h
+        FileManager.cpp
 )

@@ -2,16 +2,16 @@
 #define BUGS_DIRECTORY_FIELD_H
 #include <string>
 
-enum Type { INTEGER, STRING, CHAR, DATE };
+enum DataType { INTEGER, STRING, CHAR, DATE };
 using namespace std;
 class Field {
 private:
     string identifier;
-    Type type;
+    DataType type;
 public:
-    Field(const string &identifier, Type type);
+    Field(const string &identifier, DataType type);
     const string &getIdentifier() const;
-    Type getType() const;
+    DataType getType() const;
     virtual ~Field();
 };
 

@@ -5,18 +5,21 @@
 #include "List.h"
 #include "hash_table/HashTable.h"
 #include "Tree.h"
+#include "FileManager.cpp"
 
 using namespace std;
 
 class Controller {
 private:
     HashTable<string, HashTable<string,Tree<string>*>* > *groups;
-    static Type getType(const string& s);
-    static List<Field*>* getFields(string);
+    FileManager *files;
+    static DataType getType(const string& s);
+    List<Field*>* getFields(string);
     static List<string>* getData(string);
 public:
     Controller();
     void analyze(const string&);
+    void printStatus();
     void drawCompleteGraph();
 };
 

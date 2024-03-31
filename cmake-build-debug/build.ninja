@@ -73,6 +73,12 @@ build CMakeFiles/bugs_directory.dir/model/Field.cpp.o: CXX_COMPILER__bugs_direct
   OBJECT_DIR = CMakeFiles/bugs_directory.dir
   OBJECT_FILE_DIR = CMakeFiles/bugs_directory.dir/model
 
+build CMakeFiles/bugs_directory.dir/FileManager.cpp.o: CXX_COMPILER__bugs_directory_unscanned_Debug /home/hania/Desktop/edd/bugs_directory/FileManager.cpp || cmake_object_order_depends_target_bugs_directory
+  DEP_FILE = CMakeFiles/bugs_directory.dir/FileManager.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/bugs_directory.dir
+  OBJECT_FILE_DIR = CMakeFiles/bugs_directory.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target bugs_directory
@@ -81,7 +87,7 @@ build CMakeFiles/bugs_directory.dir/model/Field.cpp.o: CXX_COMPILER__bugs_direct
 #############################################
 # Link the executable bugs_directory
 
-build bugs_directory: CXX_EXECUTABLE_LINKER__bugs_directory_Debug CMakeFiles/bugs_directory.dir/main.cpp.o CMakeFiles/bugs_directory.dir/hash_table/Pair.cpp.o CMakeFiles/bugs_directory.dir/Controller.cpp.o CMakeFiles/bugs_directory.dir/model/Field.cpp.o
+build bugs_directory: CXX_EXECUTABLE_LINKER__bugs_directory_Debug CMakeFiles/bugs_directory.dir/main.cpp.o CMakeFiles/bugs_directory.dir/hash_table/Pair.cpp.o CMakeFiles/bugs_directory.dir/Controller.cpp.o CMakeFiles/bugs_directory.dir/model/Field.cpp.o CMakeFiles/bugs_directory.dir/FileManager.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/bugs_directory.dir
   POST_BUILD = :
