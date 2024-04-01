@@ -7,7 +7,7 @@ namespace fs = std::filesystem;
 class FileManager {
 public:
     void createFolder(const std::string& folderName) {
-        std::string path = "/home/hania/Desktop/groups/" + folderName;
+        std::string path = "/home/hania/Desktop/directory/" + folderName;
         if (fs::exists(path)) {
             fs::remove_all(path);
         }
@@ -16,7 +16,7 @@ public:
     }
 
     void writeFile(const std::string& subfolderName, const std::string& fileName, const std::string& content) {
-        std::string folderPath = "/home/hania/Desktop/groups/" + subfolderName;
+        std::string folderPath = "/home/hania/Desktop/directory/" + subfolderName;
         std::string filePath = folderPath + "/" + fileName;
         if (fs::exists(folderPath)) {
             std::ofstream file(filePath);
@@ -28,5 +28,16 @@ public:
                 std::cerr << "No se pudo abrir el archivo: " << filePath << std::endl;
             }
         }
+    }
+
+    void generateGraph(std::string dotContent){
+        std::ofstream file("/home/hania/Desktop/directory/graphs/graph.dot");
+        if (!file.is_open()) {
+            std::cerr << "Error al abrir el archivo." << std::endl;
+        }
+        file << dotContent << std::endl;
+        file.close();
+        system("dot -Tpng /home/hania/Desktop/directory/graphs/graph.dot -o /home/hania/Desktop/directory/graphs/graph.png");
+        std::cout << "\nGráfico generado correctamente en /home/hania/Desktop/directory/graphs/graph.dot" << std::endl;
     }
 };

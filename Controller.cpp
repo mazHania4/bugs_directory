@@ -1,6 +1,9 @@
 #include "Controller.h"
+#include <ctime>
 
 void Controller::analyze(const string& s) {
+    time_t now = time(0);
+    string date_time = ctime(&now);
     if (s.substr(0,13) == "ADD NEW-GROUP"){ //ADD NEW-GROUP [group name] FIELDS ([field dataType], ...);
         string groupName = s.substr(14,s.find(' ', 14)-14);
         List<Field*> *fields = getFields(s.substr(14+groupName.size()));
@@ -9,6 +12,8 @@ void Controller::analyze(const string& s) {
             fieldsTbl->insert(fields->get(i)->getIdentifier(), new Tree<string>(fields->get(i)->getType()) );
         }
         groups->insert(groupName, fieldsTbl);
+        log->add(">>"+date_time+"\tCREATED GROUP ["+groupName+"] with ["+ to_string(fields->getSize())+"] fields");
+        cout<<"\nCreado exitosamente";
     } else if (s.substr(0,14) == "ADD CONTACT IN"){ //ADD CONTACT IN [group name] FIELDS ([data], ...);
         string groupName = s.substr(15,s.find(' ', 15)-15);
         List<string>*data = getData(s.substr(16+groupName.size()));
@@ -20,6 +25,8 @@ void Controller::analyze(const string& s) {
             tree->insert(data->get(i), data);
             j++;
         }
+        log->add(">>"+date_time+"\tCREATED new contact in group: ["+groupName+"] ");
+        cout<<"\nCreado exitosamente";
     } else if (s.substr(0,15) == "FIND CONTACT IN"){ //FIND CONTACT IN [group name] CONTACT-FIELD [field]=[DataToCompare];
         string groupName = s.substr(16,s.find(' ', 16)-16);
         int n = s.find('=', 31+groupName.size())-31-groupName.size();
@@ -41,23 +48,30 @@ void Controller::analyze(const string& s) {
             }
         }
         cout<<endl<<"---"<<endl;
+        log->add(">>"+date_time+"\tSEARCHED contact in group: ["+groupName+"] with condition: ["
+                        +fieldName+"="+value+"] found:["+to_string(found->getSize())+"]");
     } else if (s.substr(0,6) == "EXPORT"){
         string groupName = s.substr(7, s.length()-8);
         HashTable<string, Tree<string>*> *fieldsTbl = groups->get(groupName);
         List<string> *keys = fieldsTbl->getKeys();
         List<List<string> *> *fieldsL = fieldsTbl->get(keys->get(0))->get();
-        files->createFolder(groupName);
+        files->createFolder("groups/"+groupName);
         for (int i = 0; i < fieldsL->getSize(); ++i) {
             List<string> *fields = fieldsL->get(i);
             string content = "\n";
             for (int j = 0; j < keys->getSize(); ++j) {
                 content.append(keys->get(j)+": "+fields->get(fields->getSize()-1-j)+"\n");
             }
-            files->writeFile(groupName, to_string(i), content);
+            files->writeFile("groups/"+groupName, to_string(i), content);
         }
+        log->add(">>"+date_time+"\tEXPORTED group: ["+groupName+"] with ["+ to_string(fieldsL->getSize())+"] contacts");
     } else if (s.substr(0,3) == "LOG"){
-
-
+        files->createFolder("logs/");
+        string content;
+        for (int i = log->getSize()-1; i>=0 ; --i) {
+            content.append(log->get(i)+"\n");
+        }
+        files->writeFile("logs/", "log", content);
     } else if (s.substr(0,7) == "REPORTS"){
         List<string> *groupNames = groups->getKeys();
         int totalElements = 0;
@@ -88,8 +102,21 @@ void Controller::analyze(const string& s) {
         }
         cout<<"\n  INTEGER: "<<ints<<"\n  DATE: "<<dates;
         cout<<"\n  CHAR: "<<chars<<"\n  STRING: "<<strings;
-    } else if (s.substr(0,5) == "GRAPH"){
-        drawCompleteGraph();
+        log->add(">>"+date_time+"\tCONSULTED REPORTS");
+    } else if (s.substr(0,5) == "GRAPH"){ // GRAPH; | GRAPH [groupName]; | GRAPH [groupName] COMPLETE;
+        if (s.length()==6) {
+            drawCompleteGraph();
+            log->add(">>"+date_time+"\tGENERATED GRAPH");
+        }
+        else if (s.substr(s.length()-9,8) == "COMPLETE") {
+            string groupName = s.substr(6, s.length()-16);
+            drawCompleteGraph(groupName);
+            log->add(">>"+date_time+"\tGENERATED COMPLETE GRAPH of ["+groupName+"]");
+        } else {
+            string groupName = s.substr(6, s.length()-7);
+            drawGraph(groupName);
+            log->add(">>"+date_time+"\tGENERATED GRAPH of ["+groupName+"]");
+        }
     }
 }
 
@@ -150,8 +177,45 @@ void Controller::drawCompleteGraph() {
         }
     }
     dot.append("\n}");
-    cout<<dot;
+    files->generateGraph(dot);
 }
+
+void Controller::drawCompleteGraph(string groupName) {
+    string dot = "digraph G {\n"
+                 "  fontname=\"Helvetica,Arial,sans-serif\"\n"
+                 "  node [fontname=\"Helvetica,Arial,sans-serif\"]\n"
+                 "  edge [fontname=\"Helvetica,Arial,sans-serif\"]\n"
+                 "  graph [rankdir = \"LR\"];\n"
+                 "  subgraph cluster_g {\n"
+                 "    lblG [label=\""+groupName+R"( fields HashTable" shape = "record"];)";
+    dot.append(groups->get(groupName)->dotGraph("_f"));
+    dot.append("\n  }");
+    List<Pair<int, Tree<string>*>*> *trees = groups->get(groupName)->getValues();
+    for (int j = 0; j < trees->getSize(); ++j) {
+        Tree<string> *tree = trees->get(j)->getValue();
+        string id = "FT"+to_string(j);
+        dot.append( "\n  subgraph cluster_ft"+to_string(j)+"  {\n    lblFT"+to_string(j)+R"( [label="DATA AVL-Tree" shape = "record"];)");
+        dot.append(tree->dotGraphOfNode(tree->getRoot(), id));
+        dot.append("\n  }");
+        dot.append("\n  pair_f:c"+to_string(trees->get(j)->getKey())+" ->lblFT"+to_string(j));
+    }
+    dot.append("\n}");
+    files->generateGraph(dot);
+}
+
+void Controller::drawGraph(string groupName) {
+    string dot = "digraph G {\n"
+                 "  fontname=\"Helvetica,Arial,sans-serif\"\n"
+                 "  node [fontname=\"Helvetica,Arial,sans-serif\"]\n"
+                 "  edge [fontname=\"Helvetica,Arial,sans-serif\"]\n"
+                 "  graph [rankdir = \"LR\"];\n"
+                 "  subgraph cluster_g {\n"
+                 "    lblG [label=\""+groupName+R"( fields HashTable" shape = "record"];)";
+    dot.append(groups->get(groupName)->dotGraph("_f"));
+    dot.append("\n  }\n}");
+    files->generateGraph(dot);
+}
+
 
 List<string> *Controller::getData(string s) {
     auto *list = new List<string>();
@@ -172,11 +236,12 @@ List<string> *Controller::getData(string s) {
 Controller::Controller() {
     groups = new HashTable<string, HashTable<string,Tree<string>*>* >();
     files = new FileManager();
+    log = new List<string>();
 }
 
 void Controller::printStatus() {
     List<string> *gKeys = groups->getKeys();
-    cout<<"Grupos creados: ";
+    cout<<"\n------------Grupos creados:--------------";
     for (int i = 0; i < gKeys->getSize(); i++) {
         cout<<endl<<gKeys->get(i)<<" [";
         List<string> *fKeys = groups->get(gKeys->get(i))->getKeys();
@@ -186,5 +251,6 @@ void Controller::printStatus() {
         }
         cout<<"]";
     }
+    cout<<"\n-----------------------------------------";
     cout<<endl;
 }

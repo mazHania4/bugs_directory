@@ -13,14 +13,17 @@ class Controller {
 private:
     HashTable<string, HashTable<string,Tree<string>*>* > *groups;
     FileManager *files;
+    List<string> *log;
     static DataType getType(const string& s);
     List<Field*>* getFields(string);
     static List<string>* getData(string);
+    void drawCompleteGraph();
+    void drawCompleteGraph(string);
+    void drawGraph(string);
 public:
     Controller();
     void analyze(const string&);
     void printStatus();
-    void drawCompleteGraph();
 };
 
 
