@@ -11,6 +11,4 @@ DataType Field::getType() const {
 Field::Field(const string &identifier, DataType type) :
 identifier(identifier), type(type) {}
 
-Field::~Field() {
-
-}
+Field::~Field() = default;

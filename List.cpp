@@ -1,5 +1,5 @@
-#ifndef BUGS_DIRECTORY_LIST_H
-#define BUGS_DIRECTORY_LIST_H
+#ifndef BUGS_DIRECTORY_LIST_CPP
+#define BUGS_DIRECTORY_LIST_CPP
 
 template <typename T>
 struct E {
@@ -17,6 +17,7 @@ public:
     T get(int);
     bool contains(T val);
     int getSize();
+    virtual ~List() = default;
 };
 
 

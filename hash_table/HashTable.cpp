@@ -1,9 +1,8 @@
-#ifndef BUGS_DIRECTORY_HASHTABLE_H
-#define BUGS_DIRECTORY_HASHTABLE_H
+#ifndef BUGS_DIRECTORY_HASHTABLE_CPP
+#define BUGS_DIRECTORY_HASHTABLE_CPP
 
 #include "Pair.h"
 #include "Pair.cpp"
-#include "../List.h"
 #include <cmath>
 #include <iostream>
 #include <sstream>
@@ -28,6 +27,7 @@ public:
     List<Pair<int, V>*>* getValues(); //for graphs
     void print();
     List<K> * getKeys();
+    virtual ~HashTable() = default;
 };
 
 template<typename K, typename V>

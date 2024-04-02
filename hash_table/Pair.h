@@ -13,6 +13,7 @@ public:
     V getValue();
     void setValue(V);
     void setKey(K);
+    virtual ~Pair() = default;
 };
 
 

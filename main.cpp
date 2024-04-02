@@ -1,6 +1,6 @@
 #include <iostream>
-#include "hash_table/HashTable.h"
-#include "Tree.h"
+#include "hash_table/HashTable.cpp"
+#include "Tree.cpp"
 #include "Controller.h"
 #include <stdexcept>
 
@@ -54,16 +54,24 @@ using namespace std;
      controller->analyze("ADD CONTACT IN amigos FIELDS (Pedro, Perez, 85256545, 04-09-1989);");
      controller->analyze("ADD CONTACT IN amigos FIELDS (Marta, Martinez, 41526378, 28-12-1995);");
      controller->analyze("ADD CONTACT IN amigos FIELDS (Juan, Juarez, 78963214, 14-08-20024);");
-     controller->analyze("FIND CONTACT IN amigos CONTACT-FIELD nombre=ASD");
+     controller->analyze("FIND CONTACT IN amigos CONTACT-FIELD nombre=Pedro;");
      controller->printStatus();
      controller->analyze("EXPORT amigos;");
      controller->analyze("EXPORT clientes;");
      controller->analyze("REPORTS;");
-     controller->analyze("GRAPH clientes;");
+     controller->analyze("GRAPH amigos COMPLETE;");
      controller->analyze("LOG;");
  }
 
 int main() {
+     testController();
+     cout<<"######  #     #  #####   #####      #####  ####### #     # #######    #     #####  #######  #####  \n"
+           "#     # #     # #     # #     #    #     # #     # ##    #    #      # #   #     #    #    #     # \n"
+           "#     # #     # #       #          #       #     # # #   #    #     #   #  #          #    #       \n"
+           "######  #     # #  ####  #####     #       #     # #  #  #    #    #     # #          #     #####  \n"
+           "#     # #     # #     #       #    #       #     # #   # #    #    ####### #          #          # \n"
+           "#     # #     # #     # #     #    #     # #     # #    ##    #    #     # #     #    #    #     # \n"
+           "######   #####   #####   #####      #####  ####### #     #    #    #     #  #####     #     #####  \n";
     Controller *controller = new Controller();
     while (true){
         cout<<"\n----------STATEMENT OPTIONS:-------------";

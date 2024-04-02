@@ -1,7 +1,8 @@
-#ifndef BUGS_DIRECTORY_TREE_H
-#define BUGS_DIRECTORY_TREE_H
+#ifndef BUGS_DIRECTORY_TREE_CPP
+#define BUGS_DIRECTORY_TREE_CPP
+
 #include <iostream>
-#include "List.h"
+#include "List.cpp"
 #include "model/Field.h"
 
 using namespace std;
@@ -37,6 +38,7 @@ public:
     std::string dotGraphOfNode(Node<T>*, string);
     Node<T> * getRoot();
     DataType getType();
+    virtual ~Tree() = default;
 };
 
 template<typename T>
@@ -114,7 +116,6 @@ List<List<string> *> *Tree<T>::get() {
     auto *listL = new List<List<string>*>();
     traverse(root, listL);
     return listL;
-    return nullptr;
 }
 
 template<typename T>

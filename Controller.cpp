@@ -1,6 +1,9 @@
 #include "Controller.h"
 #include <ctime>
-
+//ADD NEW-GROUP gm1 FIELDS (correo STRING, telefono STRING, telefono2 STRING);
+//ADD CONTACT IN gm1 FIELDS (pedrito, 9809809,987879);
+//ADD CONTACT IN gm1 FIELDS (correoPedrito, 9809809,987879);
+//FIND CONTACT IN gm1 CONTACT-FIELD telefono=9809809;
 void Controller::analyze(const string& s) {
     time_t now = time(0);
     string date_time = ctime(&now);
@@ -31,7 +34,8 @@ void Controller::analyze(const string& s) {
         string groupName = s.substr(16,s.find(' ', 16)-16);
         int n = s.find('=', 31+groupName.size())-31-groupName.size();
         string fieldName = s.substr(31+groupName.size(),n);
-        string value = s.substr(32+groupName.size()+n, s.size()-1);
+        string value = s.substr(32+groupName.size()+n, s.size()-33-groupName.size()-n);
+        cout<<"|"<<groupName<<"|"<<fieldName<<"|"<<value<<"|";
         HashTable<string, Tree<string>*> *fieldsTbl = groups->get(groupName);
         Tree<string>* tree = fieldsTbl->get(fieldName);
         List<List<string>*> * found = tree->get(value);
@@ -50,6 +54,8 @@ void Controller::analyze(const string& s) {
         cout<<endl<<"---"<<endl;
         log->add(">>"+date_time+"\tSEARCHED contact in group: ["+groupName+"] with condition: ["
                         +fieldName+"="+value+"] found:["+to_string(found->getSize())+"]");
+        /*
+                        */
     } else if (s.substr(0,6) == "EXPORT"){
         string groupName = s.substr(7, s.length()-8);
         HashTable<string, Tree<string>*> *fieldsTbl = groups->get(groupName);

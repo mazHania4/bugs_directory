@@ -2,9 +2,9 @@
 #define BUGS_DIRECTORY_CONTROLLER_H
 #include <iostream>
 #include "model/Field.h"
-#include "List.h"
-#include "hash_table/HashTable.h"
-#include "Tree.h"
+#include "List.cpp"
+#include "hash_table/HashTable.cpp"
+#include "Tree.cpp"
 #include "FileManager.cpp"
 
 using namespace std;
@@ -24,6 +24,7 @@ public:
     Controller();
     void analyze(const string&);
     void printStatus();
+    virtual ~Controller() = default;
 };
 
 
