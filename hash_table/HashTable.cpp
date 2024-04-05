@@ -3,6 +3,7 @@
 
 #include "Pair.h"
 #include "Pair.cpp"
+#include "../List.cpp"
 #include <cmath>
 #include <iostream>
 #include <sstream>
